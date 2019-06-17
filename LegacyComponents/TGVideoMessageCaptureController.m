@@ -535,10 +535,16 @@ typedef enum
                 
             break;
     }
+
+    if (TGIsPad()) {
+        _circleWrapperView.center = targetPosition;
+    }
     
     [UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:0.8f initialSpringVelocity:0.2f options:kNilOptions animations:^
     {
-        _circleWrapperView.center = targetPosition;
+        if (!TGIsPad()) {
+            _circleWrapperView.center = targetPosition;
+        }
         _circleWrapperView.transform = CGAffineTransformIdentity;
     } completion:nil];
     
