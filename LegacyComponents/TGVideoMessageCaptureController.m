@@ -279,8 +279,14 @@ typedef enum
         _fadeView.backgroundColor = [curtainColor colorWithAlphaComponent:0.6f];
         [_wrapperView addSubview:_fadeView];
     }
-    
-    _circleWrapperView = [[UIView alloc] initWithFrame:CGRectMake((_wrapperView.frame.size.width - 216.0f - 38.0f) / 2.0f, _wrapperView.frame.size.height + 100.0f, 216.0f + 38.0f, 216.0f + 38.0f)];
+
+    CGFloat circleWrapperViewLength = 216.0f + 38.0f;
+    _circleWrapperView = [[UIView alloc] initWithFrame:(CGRect){
+        .origin.x = (_wrapperView.bounds.size.width - circleWrapperViewLength) / 2.0f,
+        .origin.y = _wrapperView.bounds.size.height + circleWrapperViewLength * 0.3f,
+        .size.width = circleWrapperViewLength,
+        .size.height = circleWrapperViewLength
+    }];
     _circleWrapperView.alpha = 0.0f;
     _circleWrapperView.clipsToBounds = false;
     [_wrapperView addSubview:_circleWrapperView];
@@ -304,8 +310,14 @@ typedef enum
         _shadowView.accessibilityIgnoresInvertColors = true;
         _placeholderView.accessibilityIgnoresInvertColors = true;
     }
-    
-    _ringView = [[TGVideoMessageRingView alloc] initWithFrame:CGRectMake((_circleWrapperView.frame.size.width - 234.0f) / 2.0f, (_circleWrapperView.frame.size.height - 234.0f) / 2.0f, 234.0f, 234.0f)];
+
+    CGFloat ringViewLength = 234.0f;
+    _ringView = [[TGVideoMessageRingView alloc] initWithFrame:(CGRect){
+        .origin.x = (_circleWrapperView.bounds.size.width - ringViewLength) / 2.0f,
+        .origin.y = (_circleWrapperView.bounds.size.height - ringViewLength) / 2.0f,
+        .size.width = ringViewLength,
+        .size.height = ringViewLength
+    }];
     _ringView.accentColor = self.pallete != nil ? self.pallete.buttonColor : TGAccentColor();
     [_circleWrapperView addSubview:_ringView];
     
@@ -508,19 +520,15 @@ typedef enum
     
     _circleWrapperView.transform = CGAffineTransformMakeScale(0.3f, 0.3f);
     
-    CGPoint targetPosition = CGPointMake(_wrapperView.frame.size.width / 2.0f, _wrapperView.frame.size.height / 2.0f - _controlsView.frame.size.height);
+    CGPoint targetPosition = (CGPoint){
+        .x = _wrapperView.frame.size.width / 2.0f,
+        .y = _wrapperView.frame.size.height / 2.0f - _controlsView.frame.size.height
+    };
     switch (self.interfaceOrientation)
     {
         case UIInterfaceOrientationLandscapeLeft:
-            targetPosition.x = MIN(_wrapperView.frame.size.width - _circleWrapperView.bounds.size.width / 2.0f - 20.0f, _wrapperView.frame.size.width / 4.0f * 3.0f);
-            targetPosition.y = self.view.frame.size.height / 2.0f;
-            break;
-            
         case UIInterfaceOrientationLandscapeRight:
-            targetPosition.x = MAX(_circleWrapperView.bounds.size.width / 2.0f + 20.0f, _wrapperView.frame.size.width / 4.0f);
-            targetPosition.y = self.view.frame.size.height / 2.0f;
             break;
-            
         default:
             if (self.view.frame.size.height > self.view.frame.size.width && fabs(_wrapperView.frame.size.height - self.view.frame.size.height) < 50.0f)
                 targetPosition.y = _wrapperView.frame.size.height / 3.0f - 20.0f;
