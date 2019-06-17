@@ -322,9 +322,7 @@ typedef enum
     [_circleWrapperView addSubview:_ringView];
     
     CGRect controlsFrame = _controlsFrame;
-    CGFloat height = TGIsPad() ? 56.0f : 45.0f;
-    controlsFrame.origin.y = CGRectGetMaxY(controlsFrame) - height;
-    controlsFrame.size.height = height;
+    controlsFrame.size.width = _wrapperView.frame.size.width;
     
     _controlsView = [[TGVideoMessageControls alloc] initWithFrame:controlsFrame assets:_assets];
     _controlsView.pallete = self.pallete;
@@ -369,7 +367,7 @@ typedef enum
     };
     [self.view addSubview:_controlsView];
     
-    _separatorView = [[UIView alloc] initWithFrame:CGRectMake(_controlsView.frame.origin.x, _controlsFrame.origin.y - TGScreenPixel, _controlsView.frame.size.width, TGScreenPixel)];
+    _separatorView = [[UIView alloc] initWithFrame:CGRectMake(controlsFrame.origin.x, controlsFrame.origin.y - TGScreenPixel, controlsFrame.size.width, TGScreenPixel)];
     _separatorView.backgroundColor = self.pallete != nil ? self.pallete.borderColor : UIColorRGB(0xb2b2b2);
     _separatorView.userInteractionEnabled = false;
     [self.view addSubview:_separatorView];
