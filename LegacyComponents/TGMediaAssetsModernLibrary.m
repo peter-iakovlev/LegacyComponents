@@ -83,7 +83,7 @@
         return groupsSignal();
     }];
     
-    return [initialSignal then:updateSignal];
+    return [[[initialSignal startOn:[SQueue concurrentDefaultQueue]] then:updateSignal] startOn:[SQueue concurrentDefaultQueue]];
 }
 
 - (SSignal *)cameraRollGroup
