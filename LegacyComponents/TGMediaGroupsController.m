@@ -19,6 +19,7 @@
     SMetaDisposable *_groupsDisposable;
     
     UITableView *_tableView;
+    UIActivityIndicatorView *_indicatorView;
 }
 @end
 
@@ -62,6 +63,11 @@
     _tableView.dataSource = self;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
+
+    _indicatorView = [[UIActivityIndicatorView alloc] init];
+    _indicatorView.color = self.pallete.secondaryTextColor;
+    _indicatorView.frame = self.view.bounds;
+    [self.view addSubview:_indicatorView];
     
     self.scrollViewsForAutomaticInsetsAdjustment = @[ _tableView ];
     
@@ -94,6 +100,8 @@
     
     __weak TGMediaGroupsController *weakSelf = self;
     _groupsDisposable = [[SMetaDisposable alloc] init];
+    [_indicatorView startAnimating];
+
     [_groupsDisposable setDisposable:[[[_assetsLibrary assetGroups] deliverOn:[SQueue mainQueue]] startWithNext:^(NSArray *next)
     {
         __strong TGMediaGroupsController *strongSelf = weakSelf;
@@ -102,6 +110,8 @@
         
         strongSelf->_groups = next;
         [strongSelf->_tableView reloadData];
+        [strongSelf->_indicatorView stopAnimating];
+        [strongSelf->_indicatorView setHidden:YES];
         
         if (!strongSelf.viewControllerHasEverAppeared && next.count > 0)
         {
