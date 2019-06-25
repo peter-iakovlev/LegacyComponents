@@ -231,8 +231,12 @@ static const CGFloat outerCircleMinScale = innerCircleRadius / outerCircleRadius
         return;
     }
     UIView *parentView = [_presentation view];
-    
-    CGPoint centerPoint = [self.superview convertPoint:self.center toView:parentView];
+
+    // Self and parent view may be in different windows
+    CGPoint centerPointInSelfWindow = [self.window convertPoint:self.center fromView:self.superview];
+    CGPoint centerPointInParentViewWindow = [self.window convertPoint:centerPointInSelfWindow toWindow:parentView.window];
+    CGPoint centerPoint = [parentView.window convertPoint:centerPointInParentViewWindow toView:parentView];
+
     centerPoint.x += _centerOffset.x;
     centerPoint.y += _centerOffset.y;
     _innerCircleView.center = centerPoint;
